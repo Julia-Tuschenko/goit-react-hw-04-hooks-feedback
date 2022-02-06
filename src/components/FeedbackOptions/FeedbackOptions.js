@@ -14,16 +14,6 @@ const FeedbackOptions = ({ options, onReview }) => {
             </Button>
           ))}
         </InfoList>
-        {/* <InfoList>
-          <Button type="button" onClick={onNeutral}>
-            Neutral
-          </Button>
-        </InfoList>
-        <InfoList>
-          <Button type="button" onClick={onBad}>
-            Bad
-          </Button>
-        </InfoList> */}
       </ListBtn>
     </Section>
   );

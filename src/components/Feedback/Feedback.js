@@ -1,79 +1,57 @@
-import React from 'react';
+import { useState } from 'react';
 import FeedbackOptions from '../FeedbackOptions/FeedbackOptions';
 import Statistics from '../Statistics/Statistics';
 import Notification from '../Notification/Notification';
 
-class Feedback extends React.Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
+function Feedback() {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  const btnReview = event => {
+    const btnName = event.currentTarget.value;
+
+    switch (btnName) {
+      case 'good':
+        setGood(prev => prev + 1);
+        break;
+      case 'neutral':
+        setNeutral(prev => prev + 1);
+        break;
+      case 'bad':
+        setBad(prev => prev + 1);
+        break;
+
+      default:
+        return;
+    }
   };
 
-  // goodReview = () => {
-  //   this.setState(prevState => {
-  //     return {
-  //       good: prevState.good + 1,
-  //     };
-  //   });
-  // };
+  const countTotalFeedback = good + neutral + bad;
+  const countPositiveFeedbackPercentage = Math.round(
+    (good * 100) / countTotalFeedback,
+  );
 
-  // neutralReview = () => {
-  //   this.setState(prevState => {
-  //     return {
-  //       neutral: prevState.neutral + 1,
-  //     };
-  //   });
-  // };
+  return (
+    <div>
+      <FeedbackOptions
+        options={['good', 'neutral', 'bad']}
+        onReview={btnReview}
+      />
 
-  // badReview = () => {
-  //   this.setState(prevState => {
-  //     return {
-  //       bad: prevState.bad + 1,
-  //     };
-  //   });
-  // };
-
-  btnReview = event => {
-    const btnValue = event.currentTarget.value;
-    this.setState(prevState => ({
-      ...prevState,
-      [btnValue]: prevState[btnValue] + 1,
-    }));
-  };
-
-  countTotalFeedback = () => {
-    const { good, neutral, bad } = this.state;
-    return good + neutral + bad;
-  };
-
-  countPositiveFeedbackPercentage = () => {
-    const { good } = this.state;
-    return Math.round((good * 100) / this.countTotalFeedback());
-  };
-
-  render() {
-    const { good, neutral, bad } = this.state;
-    const btnNames = Object.keys(this.state);
-
-    return (
-      <div>
-        <FeedbackOptions options={btnNames} onReview={this.btnReview} />
-
-        {this.countTotalFeedback() ? (
-          <Statistics
-            good={good}
-            neutral={neutral}
-            bad={bad}
-            total={this.countTotalFeedback()}
-            positivePercentage={this.countPositiveFeedbackPercentage()}
-          />
-        ) : (
-          <Notification message="There is no feedback" />
-        )}
-      </div>
-    );
-  }
+      {countTotalFeedback ? (
+        <Statistics
+          good={good}
+          neutral={neutral}
+          bad={bad}
+          total={countTotalFeedback}
+          positivePercentage={countPositiveFeedbackPercentage}
+        />
+      ) : (
+        <Notification message="There is no feedback" />
+      )}
+    </div>
+  );
 }
 
 export default Feedback;
